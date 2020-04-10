@@ -1,0 +1,142 @@
+<!-- https://www.youtube.com/watch?v=6oFvqLfRnsU -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/tonsky/FiraCode@2/distr/fira_code.css"
+    />
+  </head>
+  <body>
+    <h1>ThreeJS Rocks! :)</h1>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js"></script>
+    <script>
+      // Scene, Camera and Renderer (WebGL, etc.) are three primary things we need for a Three.js project:
+      var scene = new THREE.Scene();
+
+      var camera = new THREE.PerspectiveCamera(
+        // Field of view:
+        75,
+        // Aspect Ratio (keep the browser's):
+        window.innerWidth / window.innerHeight,
+        // Near and Far Planes:
+        0.1,
+        1000
+      );
+      camera.position.z = 5;
+
+      var renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setClearColor('#e5e5e5');
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      // Create out canvas element with the renderer settings above:
+      document.body.appendChild(renderer.domElement);
+
+      // Make window responsive:
+      window.addEventListener('resize', () => {
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.aspect = window.innerWidth / window.innerHeight;
+
+        camera.updateProjectionMatrix();
+      });
+
+      //   raycaster helps us know where/which object has been clicked by user:
+      var raycaster = new THREE.Raycaster();
+      var mouse = new THREE.Vector2();
+
+      // Any 3d element needs: 1)Form and 2)material :
+      // var geometry = new THREE.SphereGeometry(1, 4, 4);
+      var geometry = new THREE.BoxGeometry(1, 1, 1);
+      var material = new THREE.MeshLambertMaterial({ color: 0xf7f7f7 });
+      //   var mesh = new THREE.Mesh(geometry, material);
+      //   scene.add(mesh);
+
+      for (var i = 0; i < 15; i++) {
+        var mesh = new THREE.Mesh(geometry, material);
+        mesh.position.x = (Math.random() - 0.5) * 10;
+        mesh.position.y = (Math.random() - 0.5) * 10;
+        mesh.position.z = (Math.random() - 0.5) * 10;
+        scene.add(mesh);
+      }
+
+      //   mesh.position.x = 2;
+      //   mesh.position.y = 2;
+      //   mesh.position.z = -2;
+      //   mesh.position(2, 2, -2);
+      //   mesh.rotation.set(45, 0, 0);
+      //   mesh.scale.set(1, 2, 1);
+
+      var light = new THREE.PointLight(0xffffff, 1, 1000);
+      light.position.set(0, 0, 0);
+      scene.add(light);
+
+      var light = new THREE.PointLight(0xffffff, 2, 1000);
+      light.position.set(0, 0, 25);
+      scene.add(light);
+
+      // Show the background color we set earlier (this line has to be at the end):
+      // This also keeps the size of the object the same as we resize the browser window,
+      // as it re-draws the object everytime the screen re-renders (~60fps):
+      var render = function () {
+        requestAnimationFrame(render);
+
+        // mesh.rotation.x += 0.05;
+        // mesh.rotation.y += 0.01;
+        // mesh.scale.x -= 0.01;
+
+        renderer.render(scene, camera);
+      };
+
+      function onMouseMove(event) {
+        event.preventDefault();
+
+        // This is from the docs:
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+
+        var intersects = raycaster.intersectObjects(scene.children, true);
+        for (var i = 0; i < intersects.length; i++) {
+          //   intersects[i].object.material.color.set(0xff0000);
+          // Timeline is coming from gsap package:
+          //   this.tl = new TimelineMax().delay(0.3);
+          this.tl = new TimelineMax();
+          this.tl.to(intersects[i].object.scale, 1, {
+            x: 2,
+            ease: Expo.easeOut,
+          });
+          this.tl.to(intersects[i].object.scale, 0.5, {
+            x: 0.5,
+            ease: Expo.easeOut,
+          });
+          this.tl.to(intersects[i].object.position, 0.5, {
+            x: 2,
+            ease: Expo.easeOut,
+          });
+          this.tl.to(
+            intersects[i].object.rotation,
+            0.5,
+            { y: Math.PI * 0.5, ease: Expo.easeOut },
+            '=-1.5'
+          );
+        }
+      }
+
+      render();
+
+      //   document.body.addEventListener('click', () => {
+      //     // The play() method will play the animations defined above:
+      //     this.tl.play();
+      //   });
+
+      window.addEventListener('mousemove', onMouseMove);
+    </script>
+  </body>
+</html>
