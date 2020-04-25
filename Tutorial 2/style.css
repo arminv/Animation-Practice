@@ -10,7 +10,7 @@
   left: 0;
   width: 100%;
   height: 100vh;
-  background: linear-gradient(to left, #ba7453, #d1a984);
+  background: linear-gradient(to left, #ba7453c9, #d1a984b4);
   /* To put this behind everything else: */
   z-index: -1;
 }
