@@ -32,7 +32,10 @@ function App() {
       <Header />
       <Modal showModal={showModal} setShowModal={setShowModal} />
       {/* NOTE: this allows us to remove an element from DOM with an 'exit' animation: */}
-      <AnimatePresence exitBeforeEnter>
+      <AnimatePresence
+        exitBeforeEnter
+        onExitComplete={() => setShowModal(false)}
+      >
         <Switch location={location} key={location.key}>
           <Route path='/base'>
             <Base addBase={addBase} pizza={pizza} />
