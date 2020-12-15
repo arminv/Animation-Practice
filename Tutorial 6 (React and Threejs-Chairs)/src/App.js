@@ -1,20 +1,21 @@
-import React, { useRef, useEffect, useState, Suspense } from "react";
-import "./App.scss";
+import React, { useRef, useEffect, useState, Suspense } from 'react';
+import './App.scss';
 //Components
-import Header from "./components/header";
-import { Section } from "./components/section";
+import Header from './components/header';
+import { Section } from './components/section';
 
 // Page State
-import state from "./components/state";
+import state from './components/state';
 
 // R3F
-import { Canvas, useFrame } from "react-three-fiber";
-import { Html, useProgress, useGLTFLoader } from "drei";
+import { Canvas, useFrame } from 'react-three-fiber';
+// DREI provides useful helpers for working with react-three-fiber:
+import { Html, useProgress, useGLTFLoader } from 'drei';
 
 // React Spring
-import { a, useTransition } from "@react-spring/web";
+import { a, useTransition } from '@react-spring/web';
 //Intersection Observer
-import { useInView } from "react-intersection-observer";
+import { useInView } from 'react-intersection-observer';
 
 function Model({ url }) {
   const gltf = useGLTFLoader(url, true);
@@ -107,10 +108,16 @@ export default function App() {
     <>
       <Header />
       {/* R3F Canvas */}
+      {/* Note: any Three.js code has to be inside a Canvas - it renders threejs elements, not DOM! */}
+      {/* Note: The canvas stretches to 100% of the next relative/abosulte parent container. Make sure your canvas is given space to show contents! */}
+      {/* We can give the canvas additional properties like 'style' and 'className', which will be added to the container (a div) that holds the dom-canvas element. */}
       <Canvas
         concurrent
+        // NOTE: this helps us show better colors:
         colorManagement
-        camera={{ position: [0, 0, 120], fov: 70 }}>
+        // NOTE: the camera accepts position for [x, y, z] axes. fov stands for 'Field of View' and has a default value of 50:
+        camera={{ position: [0, 0, 120], fov: 70 }}
+      >
         {/* Lights Component */}
         <Lights />
         <Suspense fallback={null}>
@@ -118,7 +125,8 @@ export default function App() {
             domContent={domContent}
             bgColor='#f15946'
             modelPath='/armchairYellow.gltf'
-            position={250}>
+            position={250}
+          >
             <span>Meet the new </span>
             <span>shopping experience </span>
             <span>for online chairs</span>
@@ -127,7 +135,8 @@ export default function App() {
             domContent={domContent}
             bgColor='#571ec1'
             modelPath='/armchairGreen.gltf'
-            position={0}>
+            position={0}
+          >
             <span>Shit... we even</span>
             <span>got different colors</span>
           </HTMLContent>
@@ -135,7 +144,8 @@ export default function App() {
             domContent={domContent}
             bgColor='#636567'
             modelPath='/armchairGray.gltf'
-            position={-250}>
+            position={-250}
+          >
             <span>And yes</span>
             <span>we even got</span>
             <span>monochrome!</span>
@@ -147,8 +157,9 @@ export default function App() {
         className='scrollArea'
         ref={scrollArea}
         onScroll={onScroll}
-        {...events}>
-        <div style={{ position: "sticky", top: 0 }} ref={domContent} />
+        {...events}
+      >
+        <div style={{ position: 'sticky', top: 0 }} ref={domContent} />
         <div style={{ height: `${state.pages * 100}vh` }} />
       </div>
     </>

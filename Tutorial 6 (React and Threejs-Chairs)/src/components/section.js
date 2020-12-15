@@ -1,7 +1,9 @@
-import React, { createContext, useRef, useContext } from "react";
-import { useFrame, useThree } from "react-three-fiber";
-import lerp from "lerp";
-import state from "./state";
+// Note: this component is responsible for the smooth scrolling effect of the page (from a codepen):
+
+import React, { createContext, useRef, useContext } from 'react';
+import { useFrame, useThree } from 'react-three-fiber';
+import lerp from 'lerp';
+import state from './state';
 
 const offsetContext = createContext(0);
 
@@ -23,6 +25,7 @@ function Section({ children, offset, factor, ...props }) {
   );
 }
 
+// Note: these are some helpful custom hooks we can use in the project:
 function useSection() {
   const { sections, pages, zoom } = state;
   const { size, viewport } = useThree();
